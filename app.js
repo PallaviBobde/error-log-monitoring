@@ -1,0 +1,112 @@
+const fs = require("fs");
+
+// Define a data structure to store log entries
+let logEntries = [];
+
+// Function to parse input commands
+function parseCommand(command) {
+  const choice = command.trim().split(" ");
+  const parts = choice[1].trim().split(";");
+  const operation = parseInt(choice[0]);
+
+  switch (operation) {
+    case 1: {
+      const [timestamp, logType, severity] = parts;
+      logEntries.push({
+        timestamp: parseInt(timestamp),
+        logType,
+        severity: Number(severity),
+      });
+      writeToOutput('No output');
+      break;
+    }
+    case 2:
+      const [logTypeMean] = parts;
+      computeMeanSeverityByLogType(logTypeMean);
+      break;
+    case 3:
+      const [direction, timestampBeforeAfter] = parts;
+      computeMeanSeverityBeforeAfter(direction, timestampBeforeAfter);
+      break;
+    case 4:
+      const [directionLogType, logType, timestampBeforeAfterLogType] = parts;
+      computeMeanSeverityBeforeAfterLogType(
+        directionLogType,
+        logType,
+        parseInt(timestampBeforeAfterLogType)
+      );
+      break;
+    default:
+      console.log(`Invalid operation: ${operation}`);
+  }
+}
+
+// Function to compute mean severity of a log type
+function computeMeanSeverityByLogType(logType) {
+  const filteredEntries = logEntries.filter(
+    (entry) => entry.logType === logType
+  );
+  const totalSeverity = filteredEntries.reduce(
+    (sum, entry) => sum + entry.severity,
+    0
+  );
+  const meanSeverity = totalSeverity / filteredEntries.length;
+  writeToOutput(`Mean: ${meanSeverity}`);
+}
+
+// Function to compute mean severity before or after a timestamp
+function computeMeanSeverityBeforeAfter(direction, timestamp) {
+  let filteredEntries = [];
+  if (direction === "BEFORE") {
+    filteredEntries = logEntries.filter((entry) => entry.timestamp < timestamp);
+  } else if (direction === "AFTER") {
+    filteredEntries = logEntries.filter((entry) => entry.timestamp > timestamp);
+  }
+  
+  const totalSeverity = filteredEntries.reduce(
+    (sum, entry) => sum + entry.severity,
+    0
+  );
+  const meanSeverity = filteredEntries.length===0 ? 0.0 : totalSeverity / filteredEntries.length;
+  writeToOutput(
+    `Mean: ${meanSeverity}`
+  );
+}
+
+// Function to compute mean severity before or after a timestamp for a specific log type
+function computeMeanSeverityBeforeAfterLogType(direction, logType, timestamp) {
+  let filteredEntries=[];
+  if (direction === "BEFORE") {
+    filteredEntries = logEntries.filter(
+      (entry) => entry.logType === logType && entry.timestamp < timestamp
+    );
+  } else if (direction === "AFTER") {
+    filteredEntries = logEntries.filter(
+      (entry) => entry.logType === logType && entry.timestamp > timestamp
+    );
+  }
+  const totalSeverity = filteredEntries.reduce(
+    (sum, entry) => sum + entry.severity,
+    0
+  );
+  const meanSeverity = totalSeverity / filteredEntries.length;
+  writeToOutput(
+    `Mean: ${meanSeverity}`
+  );
+}
+
+// Function to write output to file
+function writeToOutput(data) {
+  fs.appendFileSync("output.txt", `${data}\n`);
+}
+
+// Read input file and process commands
+fs.readFile("input.txt", "utf8", (err, data) => {
+  if (err) {
+    console.error("Error reading input file:", err);
+    return;
+  }
+
+  const commands = data.split("\n");
+  commands.forEach(parseCommand);
+});

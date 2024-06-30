@@ -1,0 +1,10 @@
+No output
+No output
+Mean: 16.945
+No output
+No output
+Mean: 0
+Mean: 0
+Mean: 15.22
+Mean: NaN
+Mean: NaN
