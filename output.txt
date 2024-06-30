@@ -3,8 +3,8 @@ No output
 Mean: 16.945
 No output
 No output
-Mean: 0
-Mean: 0
+Mean: 0.0
+Mean: 18.2075
 Mean: 15.22
-Mean: NaN
-Mean: NaN
+Mean: 0.0
+Mean: 19.203333
