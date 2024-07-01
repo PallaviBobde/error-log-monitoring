@@ -13,7 +13,7 @@ Before you begin, ensure you have met the following requirements:
 ### 1. Clone the Repository
 First, clone the repository from GitHub:
 ```bash
-git clone https://github.com/yourusername/your-repo.git
+git clone https://github.com/PallaviBobde/error-log-monitoring.git
 cd your-repo
 ```
 ### 2. Build the Docker Image
